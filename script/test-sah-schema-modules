@@ -1,0 +1,64 @@
+#!perl
+
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
+
+use 5.010001;
+use strict;
+use warnings;
+
+use Getopt::Long qw(:config bundling no_ignore_case auto_help auto_version);
+use Test::Sah::Schema;
+
+my %opts = (
+    exclude_modules => [],
+    test_schema_examples => 1,
+);
+GetOptions(
+    'exclude-module=s' => $opts{exclude_modules},
+    'E' => sub { $opts{test_schema_examples} = 0 },
+);
+
+sah_schema_modules_ok(
+    \%opts,
+);
+
+1;
+# ABSTRACT: Test all Schema modules in distribution
+# PODNAME:
+
+=head1 SYNOPSIS
+
+In your dist directory:
+
+ % test-sah-schema-modules [options]
+
+
+=head1 DESCRIPTION
+
+This script is a command-line interface for L<Test::Sah::Schema>'s
+C<sah_schema_modules_ok()> function.
+
+
+=head1 OPTIONS
+
+=over
+
+=item * --exclude-module=s
+
+Exclude a module. Can be specified multiple times.
+
+=item * -E
+
+This sets C<test_schema_examples> to 0.
+
+=back
+
+
+=head1 SEE ALSO
+
+L<Test::Sah::Schema>
+
+=cut
