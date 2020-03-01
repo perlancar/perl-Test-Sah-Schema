@@ -10,6 +10,8 @@ package Test::Sah::Schema;
 use 5.010001;
 use strict 'subs', 'vars';
 use warnings;
+use Log::ger;
+use Log::ger::App;
 
 use File::Spec;
 use Test::Builder;
@@ -63,19 +65,22 @@ sub sah_schema_module_ok {
 
                 my $sch_dmp  = Data::Dump::dump($sch);
                 my $nsch_dmp = Data::Dump::dump($nsch);
-                last if $sch_dmp eq $nsch_dmp;
-                my $diff = Text::Diff::diff(\$sch_dmp, \$nsch_dmp);
-                $Test->diag("Schema difference with normalized version: $diff");
-                $Test->ok(0, "Schema is not normalized");
-                return 0;
+                if ($sch_dmp eq $nsch_dmp) {
+                    $Test->ok(1, "Schema is normalized");
+                } else {
+                    my $diff = Text::Diff::diff(\$sch_dmp, \$nsch_dmp);
+                    $Test->diag("Schema difference with normalized version: $diff");
+                    $Test->ok(0, "Schema is not normalized");
+                    return 0;
+                }
             }
 
           TEST_EXAMPLES: {
-                last unless $opts->{test_schema_examples};
+                last unless $opts{test_schema_examples};
                 last unless $sch->[1]{examples};
                 require Data::Sah;
 
-                my $vdr = Data::Sah::gen_validator($sch, {return_type=>'str_errmsg'});
+                my $vdr = Data::Sah::gen_validator($sch, {return_type=>'str_errmsg+val'});
 
                 my $i = 0;
                 for my $eg (@{ $sch->[1]{examples} }) {
@@ -86,15 +91,30 @@ sub sah_schema_module_ok {
                             ($eg->{name} ? " ($eg->{name})" :
                              ($eg->{summary} ? " ($eg->{summary})" : "")),
                         sub {
-                            my $errmsg = $vdr->($eg->{data});
-                            if ($eg->{valid} && $errmsg) {
-                                $Test->diag("Data should be valid, but isn't");
-                                $ok = 0;
-                                return;
-                            } elsif (!$eg->{valid} && !$errmsg) {
-                                $Test->diag("Data shouldn't be valid, but is");
-                                $ok = 0;
-                                return;
+                            my ($errmsg, $res)  = @{ $vdr->($eg->{data}) };
+                            if ($eg->{valid}) {
+                                if ($errmsg) {
+                                    $Test->ok(0, "Data should be valid, but isn't");
+                                    $ok = 0;
+                                    return;
+                                } else {
+                                    $Test->ok(1, "Data should be valid");
+                                }
+                            } else {
+                                if (!$errmsg) {
+                                    $Test->ok(0, "Data shouldn't be valid, but is");
+                                    $ok = 0;
+                                    return;
+                                } else {
+                                    $Test->ok(1, "Data should not be valid");
+                                }
+                            }
+
+                            if (exists $eg->{res}) {
+                                Test::More::is_deeply($res, $eg->{res}, 'result matches') or do {
+                                    $Test->diag($Test->explain($res));
+                                    $ok = 0;
+                                };
                             }
                         }
                     );
@@ -177,7 +197,8 @@ sub sah_schema_modules_ok {
             "Sah schema modules in dist",
             sub {
                 for my $module (@modules) {
-                    #$log->infof("Processing module %s ...", $module);
+                    next unless $module =~ /\ASah::Schema::/;
+                    log_info "Processing module %s ...", $module;
                     my $thismsg = defined $msg ? $msg :
                         "Sah schema module in $module";
                     my $thisok = sah_schema_module_ok(
