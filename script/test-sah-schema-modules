@@ -14,9 +14,14 @@ use Test::Sah::Schema;
 
 my %opts = (
     exclude_modules => [],
+    include_modules => [],
     test_schema_examples => 1,
 );
 GetOptions(
+    'include-module=s' => $opts{include_modules},
+    '<>' => sub {
+        push @{ $opts{include_modules} }, $_[0];
+    },
     'exclude-module=s' => $opts{exclude_modules},
     'E' => sub { $opts{test_schema_examples} = 0 },
 );
@@ -33,7 +38,18 @@ sah_schema_modules_ok(
 
 In your dist directory:
 
- % test-sah-schema-modules [options]
+ % test-sah-schema-modules [options] [included_module]...
+
+Examples:
+
+ # test all Sah::Schema modules in dist
+ % test-sah::schema-modules
+
+ # only test a single Sah::Schema module
+ % test-sah::schema-modules --include-module date::tz_offset
+
+ # only test a couple of Sah::Schema modules
+ % test-sah::schema-modules date::tz_offset date::tz_name
 
 
 =head1 DESCRIPTION
@@ -46,7 +62,12 @@ C<sah_schema_modules_ok()> function.
 
 =over
 
-=item * --exclude-module=s
+=item * --include-modules=s
+
+Include a module. Can be specified multiple times. If specified then only
+included modules will be tested.
+
+=item * --exclude-modules=s
 
 Exclude a module. Can be specified multiple times.
 

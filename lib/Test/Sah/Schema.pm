@@ -191,13 +191,39 @@ sub sah_schema_modules_ok {
 
     $Test->plan(tests => 1);
 
-    my @modules = all_modules(@starters);
-    if (@modules) {
+    my @include_modules;
+    {
+        my $val = delete $opts->{include_modules};
+        last unless $val;
+        for my $mod (@$val) {
+            $mod = "Sah::Schema::$mod" unless $mod =~ /^Sah::Schema::/;
+            push @include_modules, $mod;
+        }
+    }
+    my @exclude_modules;
+    {
+        my $val = delete $opts->{exclude_modules};
+        last unless $val;
+        for my $mod (@$val) {
+            $mod = "Sah::Schema::$mod" unless $mod =~ /^Sah::Schema::/;
+            push @exclude_modules, $mod;
+        }
+    }
+
+    my @all_modules = all_modules(@starters);
+    if (@all_modules) {
         $Test->subtest(
             "Sah schema modules in dist",
             sub {
-                for my $module (@modules) {
+                for my $module (@all_modules) {
                     next unless $module =~ /\ASah::Schema::/;
+                    if (@include_modules) {
+                        next unless grep { $module eq $_ } @include_modules;
+                    }
+                    if (@exclude_modules) {
+                        next if grep { $module eq $_ } @exclude_modules;
+                    }
+
                     log_info "Processing module %s ...", $module;
                     my $thismsg = defined $msg ? $msg :
                         "Sah schema module in $module";
@@ -267,7 +293,15 @@ Whether to test examples in schema.
 Look for modules in directory C<lib> (or C<blib> instead, if it exists), and
 C<run sah_schema_module_ok()> on each of them.
 
-Options are the same as in C<sah_schema_module_ok()>.
+Options are the same as in C<sah_schema_module_ok()>, plus:
+
+=over
+
+=item * include_modules
+
+=item * exclude_modules
+
+=back
 
 
 =head1 ACKNOWLEDGEMENTS
