@@ -1,3 +1,9 @@
+0.002   2020-03-03  Released-By: PERLANCAR; Urgency: medium
+
+	- CLI now accepts and respects arguments/options
+	  (--include-modules, --exclude-modules).
+
+
 0.001   2020-03-01  Released-By: PERLANCAR
 
         - First release.
