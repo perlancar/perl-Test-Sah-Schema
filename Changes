@@ -1,3 +1,9 @@
+0.006   2020-03-04  Released-By: PERLANCAR; Urgency: medium
+
+	- Always test validated value (use original value if
+	  validated_value is not specified).
+
+
 0.005   2020-03-04  Released-By: PERLANCAR; Urgency: medium
 
 	- Look at example's 'validated_value' instead of 'res' (but 'res'
