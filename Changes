@@ -1,3 +1,8 @@
+0.003   2020-03-04  Released-By: PERLANCAR; Urgency: medium
+
+	- [incompatible change] Use examples's 'value' instead of 'data'.
+
+
 0.002   2020-03-03  Released-By: PERLANCAR; Urgency: medium
 
 	- CLI now accepts and respects arguments/options
