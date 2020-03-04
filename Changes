@@ -1,3 +1,9 @@
+0.005   2020-03-04  Released-By: PERLANCAR; Urgency: medium
+
+	- Look at example's 'validated_value' instead of 'res' (but 'res'
+	  is still supported for now).
+
+
 0.004   2020-03-04  Released-By: PERLANCAR; Urgency: high
 
 	- Regain backward compatibility, also look at example's 'data' if
