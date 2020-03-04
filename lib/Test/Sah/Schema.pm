@@ -104,6 +104,14 @@ sub sah_schema_module_ok {
                                 } else {
                                     $Test->ok(1, "Value should be valid");
                                 }
+                                my $validated_value =
+                                    exists $eg->{validated_value} ? $eg->{validated_value} :
+                                    exists $eg->{res} ? $eg->{res} :
+                                    exists $eg->{value} ? $eg->{value} : $eg->{data};
+                                Test::More::is_deeply($res, $validated_value, 'Validated value matches') or do {
+                                    $Test->diag($Test->explain($res));
+                                    $ok = 0;
+                                };
                             } else {
                                 if (!$errmsg) {
                                     $Test->ok(0, "Value shouldn't be valid, but is");
@@ -113,14 +121,6 @@ sub sah_schema_module_ok {
                                     $Test->ok(1, "Value should not be valid");
                                 }
                             }
-
-                            my $validated_value =
-                                exists $eg->{validated_value} ? $eg->{validated_value} :
-                                exists $eg->{res} ? $eg->{res} : $eg->{value};
-                            Test::More::is_deeply($res, $validated_value, 'Validated value matches') or do {
-                                $Test->diag($Test->explain($res));
-                                $ok = 0;
-                            };
                         }
                     );
                 } # for example
