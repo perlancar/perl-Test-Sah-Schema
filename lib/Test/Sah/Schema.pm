@@ -91,7 +91,7 @@ sub sah_schema_module_ok {
                             ($eg->{name} ? " ($eg->{name})" :
                              ($eg->{summary} ? " ($eg->{summary})" : "")),
                         sub {
-                            my ($errmsg, $res)  = @{ $vdr->($eg->{data}) };
+                            my ($errmsg, $res)  = @{ $vdr->($eg->{value}) };
                             if ($eg->{valid}) {
                                 if ($errmsg) {
                                     $Test->ok(0, "Data should be valid, but isn't");
