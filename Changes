@@ -1,3 +1,9 @@
+0.004   2020-03-04  Released-By: PERLANCAR; Urgency: high
+
+	- Regain backward compatibility, also look at example's 'data' if
+	  'value' is not available.
+
+
 0.003   2020-03-04  Released-By: PERLANCAR; Urgency: medium
 
 	- [incompatible change] Use examples's 'value' instead of 'data'.
