@@ -1,3 +1,8 @@
+0.007   2020-03-04  Released-By: PERLANCAR; Urgency: medium
+
+	- [bugfix] Only test for validated value when example is valid.
+
+
 0.006   2020-03-04  Released-By: PERLANCAR; Urgency: medium
 
 	- Always test validated value (use original value if
