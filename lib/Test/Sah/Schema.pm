@@ -114,14 +114,13 @@ sub sah_schema_module_ok {
                                 }
                             }
 
-                            if (exists $eg->{validated_value} || exists $eg->{res}) {
-                                my $validated_value =
-                                    exists $eg->{validated_value} ? $eg->{validated_value} : $eg->{res};
-                                Test::More::is_deeply($res, $validated_value, 'Validated value matches') or do {
-                                    $Test->diag($Test->explain($res));
-                                    $ok = 0;
-                                };
-                            }
+                            my $validated_value =
+                                exists $eg->{validated_value} ? $eg->{validated_value} :
+                                exists $eg->{res} ? $eg->{res} : $eg->{value};
+                            Test::More::is_deeply($res, $validated_value, 'Validated value matches') or do {
+                                $Test->diag($Test->explain($res));
+                                $ok = 0;
+                            };
                         }
                     );
                 } # for example
