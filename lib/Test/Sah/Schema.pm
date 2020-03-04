@@ -98,7 +98,7 @@ sub sah_schema_module_ok {
                                 my ($errmsg, $res)  = @{ $vdr->($value) };
                             if ($eg->{valid}) {
                                 if ($errmsg) {
-                                    $Test->ok(0, "Value should be valid, but isn't");
+                                    $Test->ok(0, "Value should be valid, but isn't ($errmsg)");
                                     $ok = 0;
                                     return;
                                 } else {
