@@ -98,24 +98,26 @@ sub sah_schema_module_ok {
                                 my ($errmsg, $res)  = @{ $vdr->($value) };
                             if ($eg->{valid}) {
                                 if ($errmsg) {
-                                    $Test->ok(0, "Data should be valid, but isn't");
+                                    $Test->ok(0, "Value should be valid, but isn't");
                                     $ok = 0;
                                     return;
                                 } else {
-                                    $Test->ok(1, "Data should be valid");
+                                    $Test->ok(1, "Value should be valid");
                                 }
                             } else {
                                 if (!$errmsg) {
-                                    $Test->ok(0, "Data shouldn't be valid, but is");
+                                    $Test->ok(0, "Value shouldn't be valid, but is");
                                     $ok = 0;
                                     return;
                                 } else {
-                                    $Test->ok(1, "Data should not be valid");
+                                    $Test->ok(1, "Value should not be valid");
                                 }
                             }
 
-                            if (exists $eg->{res}) {
-                                Test::More::is_deeply($res, $eg->{res}, 'result matches') or do {
+                            if (exists $eg->{validated_value} || exists $eg->{res}) {
+                                my $validated_value =
+                                    exists $eg->{validated_value} ? $eg->{validated_value} : $eg->{res};
+                                Test::More::is_deeply($res, $validated_value, 'Validated value matches') or do {
                                     $Test->diag($Test->explain($res));
                                     $ok = 0;
                                 };
