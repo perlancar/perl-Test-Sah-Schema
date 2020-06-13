@@ -40,6 +40,11 @@ sub _test_module {
 
 }
 
+sub _set_option_defaults {
+    my $opts = shift;
+    $opts->{test_schema_examples} //= 1;
+}
+
 sub sah_schema_module_ok {
     require Data::Sah::Normalize;
 
@@ -49,7 +54,7 @@ sub sah_schema_module_ok {
     my $res;
     my $ok = 1;
 
-    $opts{test_schema_examples} //= [];
+    _set_option_defaults(\%opts);
 
     my $modulep = $module; $modulep =~ s!::!/!g; $modulep .= ".pm";
     require $modulep;
@@ -228,6 +233,8 @@ sub sah_schema_modules_ok {
     my $opts = (@_ && (ref $_[0] eq "HASH")) ? shift : {};
     my $msg  = shift;
     my $ok = 1;
+
+    _set_option_defaults($opts);
 
     my @starters = _starting_points();
     local @INC = (@starters, @INC);
