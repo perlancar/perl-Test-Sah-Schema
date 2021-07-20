@@ -112,6 +112,12 @@ sub sah_schema_module_ok {
                 my $i = 0;
                 for my $eg (@{ $sch->[1]{examples} }) {
                     $i++;
+                    # non-defhash example is allowed, this means the example
+                    # just specifies valid value. we normalize to hash form.
+                    unless (ref $eg eq 'HASH') {
+                        $eg = {value=>$eg, valid=>1};
+                    }
+
                     next unless $eg->{test} // 1;
                     $Test->subtest(
                         "example #$i" .
