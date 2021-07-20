@@ -69,11 +69,17 @@ sub sah_schema_module_ok {
                 require Data::Dump;
                 require Text::Diff;
                 my $nsch = Data::Sah::Normalize::normalize_schema($sch);
+                my $nsch_with_extras = [@$nsch, {}]; # extras part still accepted because most of my schema modules have it
 
                 my $sch_dmp  = Data::Dump::dump($sch);
                 my $nsch_dmp = Data::Dump::dump($nsch);
+                my $nsch_with_extras_dmp = Data::Dump::dump($nsch_with_extras);
+
                 if ($sch_dmp eq $nsch_dmp) {
                     $Test->ok(1, "Schema is normalized");
+                } elsif ($sch_dmp eq $nsch_with_extras_dmp) {
+                    $Test->carp("\e[31mSchema still contains extras part, please remove it to avoid this warning\e[0m");
+                    $Test->ok(1, "Schema is normalized but still contains extras part");
                 } else {
                     my $diff = Text::Diff::diff(\$sch_dmp, \$nsch_dmp);
                     $Test->diag("Schema difference with normalized version: $diff");
