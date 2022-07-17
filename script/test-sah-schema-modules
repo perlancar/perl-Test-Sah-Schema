@@ -1,16 +1,16 @@
 #!perl
 
-# AUTHORITY
-# DATE
-# DIST
-# VERSION
-
 use 5.010001;
 use strict;
 use warnings;
 
 use Getopt::Long qw(:config bundling no_ignore_case auto_help auto_version);
 use Test::Sah::Schema;
+
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
 
 my %opts = (
     exclude_modules => [],
@@ -43,13 +43,13 @@ In your dist directory:
 Examples:
 
  # test all Sah::Schema modules in dist
- % test-sah::schema-modules
+ % test-sah-schema-modules
 
  # only test a single Sah::Schema module
- % test-sah::schema-modules --include-module date::tz_offset
+ % test-sah-schema-modules --include-module date::tz_offset
 
  # only test a couple of Sah::Schema modules
- % test-sah::schema-modules date::tz_offset date::tz_name
+ % test-sah-schema-modules date::tz_offset date::tz_name
 
 
 =head1 DESCRIPTION

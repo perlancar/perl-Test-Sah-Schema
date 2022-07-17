@@ -2,11 +2,6 @@
 
 package Test::Sah::Schema;
 
-# AUTHORITY
-# DATE
-# DIST
-# VERSION
-
 use 5.010001;
 use strict 'subs', 'vars';
 use warnings;
@@ -16,6 +11,11 @@ use Log::ger::App;
 use File::Spec;
 use Test::Builder;
 use Test::More ();
+
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
 
 my $Test = Test::Builder->new;
 
@@ -27,17 +27,6 @@ sub import {
 
     $Test->exported_to($caller);
     $Test->plan(@_);
-}
-
-sub _test_module {
-
-    my ($module, $opts) = @_;
-    my $ok = 1;
-
-    (my $module_pm = "$module.pm") =~ s!::!/!g;
-    require $module_pm;
-    my $sch = ${"$module\::schema"};
-
 }
 
 sub _set_option_defaults {
