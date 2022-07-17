@@ -190,7 +190,7 @@ sub all_modules {
         if ( -d $file ) {
             local *DH;
             opendir DH, $file or next;
-            my @newfiles = readdir DH;
+            my @newfiles = sort readdir DH;
             closedir DH;
 
             @newfiles = File::Spec->no_upwards( @newfiles );
