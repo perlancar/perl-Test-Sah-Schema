@@ -80,8 +80,10 @@ sub sah_schema_module_ok {
           TEST_EXAMPLES: {
                 last unless $opts{test_schema_examples};
                 last unless $sch->[1]{examples};
+                require Data::Dmp;
                 require Data::Sah;
 
+                $Test->note("Generating validator for schema ".Data::Dmp::dmp($sch));
                 my $vdr = Data::Sah::gen_validator($sch, {return_type=>'str_errmsg+val'});
 
                 my $wsub;
@@ -94,7 +96,7 @@ sub sah_schema_module_ok {
                     # turn is used in applications like Perinci::CmdLine.
                     my $wres = Perinci::Sub::Wrapper::wrap_sub(
                         sub => sub { my %args = @_; [200, "OK", $args{'arg'}] },
-                        meta => { v=>1.1, args=>{arg=>{schema=>[$sch_name,req=>1]}} },
+                        meta => { v=>1.1, args=>{arg=>{schema=>[$sch_name]}} },
                         validate_args => 1,
                     );
                     die "Can't wrap subroutine with Perinci::Sub::Wrapper: $wres->[0] - $wres->[1]"
