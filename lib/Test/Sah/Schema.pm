@@ -67,6 +67,7 @@ sub sah_schema_module_ok {
                 if ($sch_dmp eq $nsch_dmp) {
                     $Test->ok(1, "Schema is normalized");
                 } elsif ($sch_dmp eq $nsch_with_extras_dmp) {
+                    $Test->note($sch_dmp);
                     $Test->carp("\e[31mSchema still contains extras part, please remove it to avoid this warning\e[0m");
                     $Test->ok(1, "Schema is normalized but still contains extras part");
                 } else {
